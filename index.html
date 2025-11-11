@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CinemaVA - DC Movie Showcase</title>
+
+<!--  Bootstrap CSS (for tooltip & popover) -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
+body{background:#000;color:#fff;overflow-x:hidden}
+.navbar{display:flex;justify-content:space-between;align-items:center;padding:20px 60px;background:rgba(0,0,0,0.85);position:fixed;width:100%;top:0;z-index:50;transition:0.3s}
+.navbar ul{list-style:none;display:flex;gap:25px}
+.navbar a{text-decoration:none;color:#fff;transition:.3s}
+.navbar a:hover{color:#e50914}
+.logo{font-size:1.7em;color:#e50914;font-weight:bold}
+
+.hero-slider{position:relative;height:90vh;width:100%;overflow:hidden}
+.video-container{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;transition:opacity 1.5s ease;z-index:0;display:flex;align-items:center;justify-content:center}
+.video-container.active{opacity:1;z-index:0}
+.bg-video{width:100%;height:100%;object-fit:cover}
+.overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to top,rgba(0,0,0,0.85),rgba(0,0,0,0.25));z-index:10}
+.content{position:relative;z-index:20;text-align:center;top:50%;transform:translateY(-50%);padding:0 20px;max-width:700px;margin:0 auto}
+@keyframes pulseGlow {  0% { text-shadow: 0 0 15px #e50914, 0 0 30px #e50914; }  100% { text-shadow: 0 0 25px #e50914, 0 0 50px #e50914; }}
+.content h2 {  font-weight: 900;text-transform: uppercase; letter-spacing: 2px;color: #fff;animation: pulseGlow 2s infinite alternate;}
+.content p{margin-bottom:20px;line-height:1.5}
+.btn{display:inline-block;background:#e50914;color:#fff;padding:10px 20px;border-radius:4px;text-decoration:none;margin-right:10px;transition:all .3s}
+.btn:hover{background:#b0060f}
+.btn.secondary{background:transparent;border:1px solid #fff}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);font-size:2.5em;color:#fff;background:rgba(0,0,0,0.35);border:none;padding:10px 18px;cursor:pointer;transition:background .3s;z-index:30}
+.arrow:hover{background:rgba(0,0,0,0.6)}
+.arrow.left{left:20px}.arrow.right{right:20px}
+
+.movie-grid{padding:80px 20px;background:#111;text-align:center}
+.grid{display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
+.card{background:#222;border-radius:10px;overflow:hidden;width:250px;transition:transform .3s, box-shadow .3s;cursor:pointer}
+.card:hover{transform:scale(1.05);box-shadow:0 0 20px #e50914;}
+.card img{width:100%;height:350px;object-fit:cover}
+.card h3{ margin:10px 0; color:#fff; font-weight:600; text-shadow:0 0 8px #000; }
+
+.card .btn.small{margin-bottom:10px}
+
+/* Modal */
+.modal { display: none; position: fixed; z-index: 1000; left:0; top:0; width:100%; height:100%; overflow:auto; background: rgba(0,0,0,0.85);}
+.modal-content{background:#111;margin:5% auto;padding:20px;border-radius:10px;width:90%;max-width:600px;color:#fff;position:relative;animation:fadeIn 0.5s;}
+@keyframes fadeIn{from{opacity:0} to{opacity:1}}
+.close{color:#fff;position:absolute;top:10px;right:20px;font-size:28px;font-weight:bold;cursor:pointer;}
+.close:hover{color:#e50914;}
+.modal-content img{width:100%;border-radius:10px;margin-bottom:15px;}
+.modal-content h2{margin-bottom:10px;}
+.modal-content p{line-height:1.5;margin-bottom:15px;}
+.modal-content a.btn{margin-right:10px;margin-bottom:10px;display:inline-block;}
+#error{color:red;font-size:0.85rem;display:none;}
+#movie-page-btn .btn{margin-top:10px;display:inline-block;}
+
+/* Contact Modal */
+.contact-form {
+  background: rgba(15, 15, 15, 0.95);
+  border-radius: 20px;
+  border: 2px solid rgba(229, 9, 20, 0.5);
+  box-shadow: 0 0 25px rgba(229, 9, 20, 0.4);
+  backdrop-filter: blur(8px);
+  padding: 30px 40px;
+  width: 90%;
+  max-width: 500px;
+  margin: auto;
+  color: #fff;
+  animation: fadeInUp 0.5s ease;
+}
+
+.contact-form h2 {
+  font-weight: 800;
+  text-shadow: 0 0 10px #e50914;
+}
+
+/* Input and Textarea - Full Width */
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  background: rgba(40, 40, 40, 0.9);
+  border: 1px solid #333;
+  color: #fff;
+  border-radius: 12px;
+  padding: 12px 14px;
+  transition: all 0.3s;
+  font-size: 0.95rem;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #e50914;
+  box-shadow: 0 0 12px rgba(229, 9, 20, 0.7);
+  outline: none;
+  background: rgba(50, 50, 50, 0.9);
+}
+
+/* Checkbox inline and neat */
+.form-check label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ccc;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.form-check input[type="checkbox"] {
+  accent-color: #e50914;
+  width: 18px;
+  height: 18px;
+}
+
+/* Error text */
+.error {
+  color: #ff4c4c;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  display: none;
+}
+
+/* Submit Button */
+.glow-btn {
+  width: 100%;
+  background: linear-gradient(90deg, #e50914, #b0060f);
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 1px;
+  transition: 0.3s;
+  box-shadow: 0 0 20px rgba(229, 9, 20, 0.4);
+}
+
+.glow-btn:hover {
+  background: linear-gradient(90deg, #ff0a16, #e50914);
+  transform: translateY(-2px);
+  box-shadow: 0 0 35px rgba(255, 0, 0, 0.7);
+}
+
+/* Fade animation */
+@keyframes fadeInUp {
+  from {opacity: 0; transform: translateY(20px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+footer{text-align:center;padding:20px;background:#000;z-index:100}
+@media(max-width:768px){.content h2{font-size:2em}.arrow{font-size:2em;padding:8px 12px}}
+</style>
+</head>
+
+<body>
+<header class="navbar">
+  <h1 class="logo" data-bs-toggle="tooltip" data-bs-placement="bottom" title="CinemaVA - DC Movie Showcase">CinemaVA</h1>
+  <nav>
+    <ul>
+      <li><a href="#home" data-bs-toggle="tooltip" title="Go to Home Section">Home</a></li>
+      <li><a href="#movies" data-bs-toggle="tooltip" title="View Featured Movies">Movies</a></li>
+      <li><a href="#" id="contactBtn" data-bs-toggle="tooltip" title="Contact Us for inquiries">Contact Us</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section id="home" class="hero-slider">
+  <div class="video-container active" data-index="0">
+    <video id="vid0" class="bg-video" playsinline autoplay muted loop>
+      <source src="videos/superman.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="video-container" data-index="1">
+    <video id="vid1" class="bg-video" playsinline autoplay muted loop>
+      <source src="videos/batman.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="overlay"></div>
+  <div class="content">
+    <h2 id="movie-title" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="Currently Highlighted Movie">Superman (2025)</h2>
+    <p id="movie-desc">The legend of Superman returns in an epic reimagining of hope, power, and destiny.</p>
+    <div class="buttons">
+      <a id="trailer-link" class="btn" target="_blank" href="#" data-bs-toggle="tooltip" title="Watch movie trailer">▶ Watch Trailer</a>
+      <a id="official-link" class="btn secondary" target="_blank" href="#" data-bs-toggle="tooltip" title="Visit official DC website">Official Site</a>
+    </div>
+  </div>
+  <button class="arrow left" id="prevBtn" data-bs-toggle="tooltip" title="Previous Movie">&#10094;</button>
+  <button class="arrow right" id="nextBtn" data-bs-toggle="tooltip" title="Next Movie">&#10095;</button>
+</section>
+
+<section id="movies" class="movie-grid">
+  <h2><b>Featured Movies</b></h2>
+  <div class="grid" id="movieGrid"></div>
+</section>
+
+<!-- Movie Detail Modal -->
+<div id="movieModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <img id="modal-img" src="" alt="">
+    <h2 id="modal-title"></h2>
+    <p id="modal-desc" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This section shows the synopsis of the movie."></p>
+    <a id="modal-trailer" class="btn" target="_blank">▶ Watch Trailer</a>
+    <a id="modal-official" class="btn secondary" target="_blank">Official Site</a>
+
+    <!-- Dynamic Movie Page Button -->
+    <div id="movie-page-btn"></div>
+  </div>
+</div>
+
+<!-- Contact Form Modal -->
+<div id="contactModal" class="modal">
+  <div class="modal-content contact-form">
+    <span class="close">&times;</span>
+    <h2 class="text-center mb-4">Contact Us</h2>
+    <form id="contactForm">
+      <div class="mb-3">
+        <input type="text" id="name" placeholder="Your Name" required>
+        <div class="error" id="nameError">Please enter your name.</div>
+      </div>
+
+      <div class="mb-3">
+        <input type="email" id="email" placeholder="Your Email" required>
+        <div class="error" id="emailError">Please enter a valid email.</div>
+      </div>
+
+      <div class="mb-3">
+        <textarea id="message" placeholder="Your Message" rows="4" required></textarea>
+        <div class="error" id="messageError">Please enter your message.</div>
+      </div>
+
+      <div class="form-check mb-3">
+        <label for="consent">
+          <input type="checkbox" id="consent">
+          <span>I give consent regarding data privacy and ethical use</span>
+        </label>
+        <div class="error" id="consentError">You must give consent!!!</div>
+      </div>
+
+      <button type="submit" class="glow-btn">Submit</button>
+    </form>
+  </div>
+</div>
+
+
+
+<footer>
+  <p>© 2025 CineVerse | Created by A&V</p>
+</footer>
+
+<!--  jQuery + Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+//  Enable tooltips & popovers
+document.addEventListener('DOMContentLoaded', function(){
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+
+  const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+  popoverTriggerList.map(el => new bootstrap.Popover(el));
+});
+
+// Your Original Script (unchanged)
+document.addEventListener('DOMContentLoaded', function(){
+  const containers = Array.from(document.querySelectorAll('.video-container'));
+  const videos = containers.map(c=>c.querySelector('video'));
+  const titleEl = document.getElementById('movie-title');
+  const descEl = document.getElementById('movie-desc');
+  const trailerLink = document.getElementById('trailer-link');
+  const officialLink = document.getElementById('official-link');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  const data = [
+    {title:'Superman', desc:'The legend of Superman returns in an epic reimagining of hope, power, and destiny.', trailer:'https://www.youtube.com/watch?v=Wm3UkOcUt3M', official:'https://www.dc.com/characters/superman', img:'images/superman.jpg'},
+    {title:'The Batman', desc:'When the night falls, only Batman can bring justice to Gotham’s shadows.', trailer:'https://www.youtube.com/watch?v=mqqft2x_Aa4', official:'https://www.dc.com/characters/batman', img:'images/batman.jpg'}
+  ];
+
+  let current=0, interval=null, SWITCH_MS=20000;
+  videos.forEach(v=>{v.loop=true;v.muted=true;v.play().catch(()=>{});});
+
+  function updateUI(i){ titleEl.textContent=data[i].title; descEl.textContent=data[i].desc; trailerLink.href=data[i].trailer; officialLink.href=data[i].official; }
+  function showIndex(i){ containers.forEach((c,idx)=>{ if(idx===i){ c.classList.add('active'); videos[idx].play().catch(()=>{});} else {c.classList.remove('active'); videos[idx].pause();} }); current=i; updateUI(current);}
+  function next(){ showIndex((current+1)%containers.length);}
+  function prev(){ showIndex((current-1+containers.length)%containers.length);}
+  nextBtn.addEventListener('click', ()=>{next();resetInterval();}); prevBtn.addEventListener('click', ()=>{prev();resetInterval();});
+  function resetInterval(){clearInterval(interval); interval=setInterval(next,SWITCH_MS);}
+  interval=setInterval(next,SWITCH_MS); showIndex(current);
+
+  const audio = new Audio('audio/dc_theme.mp3'); audio.loop=true; audio.volume=0.6;
+  function startAudio(){audio.play().catch(()=>{}); document.removeEventListener('click',startAudio); document.removeEventListener('keydown',startAudio);}
+  document.addEventListener('click',startAudio); document.addEventListener('keydown',startAudio);
+
+  // Generate movie cards dynamically
+  const movieGrid = document.getElementById('movieGrid');
+  const movieModal = document.getElementById('movieModal');
+  const modalImg = document.getElementById('modal-img');
+  const modalTitle = document.getElementById('modal-title');
+  const modalDesc = document.getElementById('modal-desc');
+  const modalTrailer = document.getElementById('modal-trailer');
+  const modalOfficial = document.getElementById('modal-official');
+  const modalClose = movieModal.querySelector('.close');
+  const pageBtnContainer = document.getElementById('movie-page-btn');
+
+  data.forEach((movie,i)=>{
+    const div = document.createElement('div');
+    div.className='card';
+    div.innerHTML=`<img src="${movie.img}" alt="${movie.title}" data-bs-toggle="tooltip" title="Click for ${movie.title} details"><h3>${movie.title}</h3><a href="#" class="btn small" data-bs-toggle="tooltip" title="View ${movie.title} details">Details</a>`;
+    div.querySelector('.btn').addEventListener('click',(e)=>{
+      e.preventDefault();
+      modalImg.src=movie.img;
+      modalTitle.textContent=movie.title;
+      modalDesc.textContent=movie.desc;
+      modalTrailer.href=movie.trailer;
+      modalOfficial.href=movie.official;
+
+      pageBtnContainer.innerHTML = '';
+      if (movie.title.includes('Superman')) {
+        pageBtnContainer.innerHTML = `<a href="superman.html" class="btn">Go to Superman Page</a>`;
+      } else if (movie.title.includes('Batman')) {
+        pageBtnContainer.innerHTML = `<a href="batman.html" class="btn">Go to Batman Page</a>`;
+      }
+
+      movieModal.style.display='block';
+    });
+    movieGrid.appendChild(div);
+  });
+
+  modalClose.onclick = ()=>movieModal.style.display='none';
+  window.onclick = e=>{if(e.target==movieModal) movieModal.style.display='none';}
+});
+
+// Contact Modal logic
+const contactModal=document.getElementById('contactModal');
+const contactBtn=document.getElementById('contactBtn');
+const contactClose=contactModal.querySelector('.close');
+contactBtn.onclick=()=>contactModal.style.display='block';
+contactClose.onclick=()=>contactModal.style.display='none';
+window.onclick=e=>{if(e.target==contactModal) contactModal.style.display='none';}
+
+// Contact Form Validation
+const form = document.getElementById('contactForm');
+form.addEventListener('submit',function(e){
+  e.preventDefault(); let valid=true;
+  const name=document.getElementById('name'), email=document.getElementById('email'), message=document.getElementById('message'), consent=document.getElementById('consent');
+  if(name.value.trim()===""){valid=false;document.getElementById('nameError').style.display='block';}else{document.getElementById('nameError').style.display='none';}
+  const emailPattern=/^[^ ]+@[^ ]+\.[a-z]{2,3}$/; if(!email.value.match(emailPattern)){valid=false;document.getElementById('emailError').style.display='block';}else{document.getElementById('emailError').style.display='none';}
+  if(message.value.trim()===""){valid=false;document.getElementById('messageError').style.display='block';}else{document.getElementById('messageError').style.display='none';}
+  if(!consent.checked){valid=false;document.getElementById('consentError').style.display='block';}else{document.getElementById('consentError').style.display='none';}
+  if(valid){alert('Form submitted successfully!'); form.reset(); contactModal.style.display='none';}
+});
+</script>
+</body>
+</html>

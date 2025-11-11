@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Batman (2022)</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <!-- Animate on Scroll -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <style>
+    /* General Styles */
+    body, html {
+      font-family: 'Poppins', sans-serif;
+      scroll-behavior: smooth;
+      background: #f8f9fa;
+      color: #212529;
+    }
+
+    a { text-decoration: none; }
+
+    /* Navbar */
+    .navbar {
+      transition: all 0.4s;
+      background: transparent;
+    }
+    .navbar.scrolled {
+      background: #ffffff !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .navbar .nav-link.active {
+      color: #ffffff !important;
+      background-color: #dc3545;
+      border-radius: 5px;
+      padding: 5px 15px;
+      transition: 0.3s;
+    }
+    .navbar .nav-link.active:hover {
+      background-color: #a71d2a;
+    }
+    .navbar .nav-link {
+      color: #212529 !important;
+    }
+
+    .explore-btn {
+      font-weight: 700;
+      text-transform: uppercase;
+      border: 2px solid #dc3545;
+      color: #dc3545;
+      transition: 0.4s;
+      box-shadow: 0 0 15px #dc3545;
+      z-index: 1;
+    }
+    .explore-btn:hover {
+      background: #dc3545;
+      color: #fff;
+      box-shadow: 0 0 25px #dc3545, 0 0 50px #dc3545;
+    }
+
+    /* Poster & Synopsis */
+    .poster {
+      box-shadow: 0 0 20px rgba(220,53,69,0.5);
+      transition: transform 0.3s;
+      border-radius: 10px;
+    }
+    .poster:hover {
+      transform: scale(1.05);
+    }
+
+    /* Movie Cards */
+    .movie-card {
+      background: #ffffff;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(220,53,69,0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .movie-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 25px rgba(220,53,69,0.3);
+    }
+
+    /* Cast Cards */
+    .cast-card {
+      background: #f1f3f5;
+      border-radius: 15px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .cast-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(220,53,69,0.3);
+    }
+
+    /* Footer */
+    footer {
+      background: #e9ecef;
+      color: #212529;
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 40px;
+      border-top: 1px solid #dee2e6;
+    }
+
+    .batman-bottom {
+      text-align: center;
+      position: relative;
+    }
+
+    .batman-logo-text {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .batman-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      opacity: 0.1;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .batman-text {
+      position: relative;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 4rem;
+      color: #dc3545;
+      z-index: 2;
+      margin: 0;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .batman-bottom .explore-btn {
+      font-weight: 700;
+      text-transform: uppercase;
+      border: 2px solid #dc3545;
+      color: #dc3545;
+      transition: 0.4s;
+      box-shadow: 0 0 15px #dc3545;
+    }
+
+    .batman-bottom .explore-btn:hover {
+      background: #dc3545;
+      color: #fff;
+      box-shadow: 0 0 25px #dc3545, 0 0 50px #dc3545;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold text-danger" href="#" data-bs-toggle="tooltip" title="CinemaVA Home">CinemaVA</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+              data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" 
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="index.html" data-bs-toggle="tooltip" title="Back to Home">Home</a></li>
+        </ul>
+        <!-- Search -->
+        <form class="d-flex ms-3">
+          <input class="form-control form-control-sm me-2" type="search" placeholder="Search..." aria-label="Search">
+          <button class="btn btn-sm btn-danger" type="submit">Go</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Poster & Synopsis -->
+  <section class="container my-5" id="synopsis">
+    <div class="row g-4 align-items-center">
+      <div class="col-md-5 text-center" data-aos="fade-right">
+        <img src="images/batposter.png" alt="The Batman Poster" 
+             class="img-fluid shadow-lg poster" data-bs-toggle="tooltip" title="The Batman (2022) Official Poster">
+      </div>
+      <div class="col-md-7" data-aos="fade-left">
+        <h2 class="text-danger" data-bs-toggle="popover" title="Synopsis" data-bs-content="Batman faces Gotham's darkest secrets.">Synopsis</h2>
+        <p class="fs-5 text-dark">Gotham is drowning in darkness, and only one man can fight it. Armed with his mind, his skills, and an unbreakable will, Batman strikes from the shadows, uncovering secrets that will change the city forever.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Movie Details & Cast -->
+  <section class="container my-5" id="details">
+    <div class="row g-4">
+      <div class="col-md-6" data-aos="flip-left">
+        <div class="card movie-card h-100">
+          <div class="card-body">
+            <h3 class="card-title text-danger" data-bs-toggle="tooltip" title="Movie production and credits">Movie Details</h3>
+            <ul class="list-unstyled text-dark">
+              <li><strong>Release Date:</strong> March 4, 2022</li>
+              <li><strong>Directed by:</strong> Matt Reeves</li>
+              <li><strong>Written by:</strong> Matt Reeves & Peter Craig</li>
+              <li><strong>Genre:</strong> Superhero / Crime-Noir Thriller</li>
+              <li><strong>Runtime:</strong> 2h 55m</li>
+              <li><strong>Box Office:</strong> $772 million worldwide</li>
+              <li><strong>Production Company:</strong> Warner Bros., DC Entertainment, DC Films</li>
+              <li><strong>Language:</strong> English</li>
+              <li><strong>Music by:</strong> Michael Giacchino</li>
+              <li><strong>Cinematography:</strong> Greig Fraser</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cast -->
+      <div class="col-md-6" id="cast" data-aos="flip-right">
+        <div class="card movie-card h-100">
+          <div class="card-body">
+            <h3 class="card-title text-danger" data-bs-toggle="tooltip" title="Meet the Gotham cast">Cast</h3>
+            <div class="row row-cols-2 g-3">
+              <div class="col">
+                <div class="cast-card p-3 text-center" data-bs-toggle="popover" title="Robert Pattinson" data-bs-content="Plays Bruce Wayne / Batman">
+                  <img src="images/robert.jpg" class="img-fluid rounded-circle mb-2" alt="Robert Pattinson">
+                  <p class="text-dark">Robert Pattinson<br><small>Batman</small></p>
+                </div>
+              </div>
+              <div class="col">
+                <div class="cast-card p-3 text-center" data-bs-toggle="popover" title="Zoë Kravitz" data-bs-content="Plays Selina Kyle / Catwoman">
+                  <img src="images/catwomen.jpg" class="img-fluid rounded-circle mb-2" alt="Zoë Kravitz">
+                  <p class="text-dark">Zoë Kravitz<br><small>Catwoman</small></p>
+                </div>
+              </div>
+              <div class="col">
+                <div class="cast-card p-3 text-center" data-bs-toggle="popover" title="Paul Dano" data-bs-content="Plays Edward Nashton / The Riddler">
+                  <img src="images/paul.jpg" class="img-fluid rounded-circle mb-2" alt="Paul Dano">
+                  <p class="text-dark">Paul Dano<br><small>Riddler</small></p>
+                </div>
+              </div>
+              <div class="col">
+                <div class="cast-card p-3 text-center" data-bs-toggle="popover" title="Jeffrey Wright" data-bs-content="Plays Commissioner Gordon">
+                  <img src="images/gordon.jpg" class="img-fluid rounded-circle mb-2" alt="Jeffrey Wright">
+                  <p class="text-dark">Jeffrey Wright<br><small>Gordon</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- Batman Section at Bottom -->
+<div class="batman-bottom text-center my-5" id="batmanSection">
+  <div class="batman-logo-text" data-bs-toggle="tooltip" title="The Batman logo and title">
+    <img src="images/bat.png" alt="Batman Logo" class="batman-logo">
+    <h1 class="batman-text">BATMAN</h1>
+  </div>
+  <div class="mt-3">
+    <a href="https://www.thebatman.com/" class="btn explore-btn btn-lg shadow" data-bs-toggle="popover" title="Explore More" data-bs-content="Visit the official Batman movie website">Explore Movie</a>
+  </div>
+</div>
+
+  <!-- Footer -->
+  <footer>
+    <p class="mb-0">© 2025 CineVerse | Created by A&V</p>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- AOS Animation JS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  
+  <script>
+    AOS.init({ duration: 1200, once: true });
+
+    window.addEventListener("scroll", function() {
+      document.querySelector(".navbar").classList.toggle("scrolled", window.scrollY > 50);
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener("click", function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute("href")).scrollIntoView({ behavior: "smooth" });
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const tooltipList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipList.map(el => new bootstrap.Tooltip(el));
+
+      const popoverList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+      popoverList.map(el => new bootstrap.Popover(el));
+    });
+  </script>
+</body>
+</html>
